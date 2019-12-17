@@ -11,10 +11,7 @@ fun parseVariable(token: String): Expr = Variable(token)
 fun parseBinaryOp(token: String, supplier: () -> Expr): Expr? =
   parseOperator(token)?.let { BinaryOp(it, supplier(), supplier()) }
 
-fun parse(it: Iterator<String>, factory: (String) -> Expr?): Expr {
-  val token = it.next()
-  return factory(token) ?: throw IllegalStateException("illegal token $token")
-}
+fun parseUsing(iterator: Iterator<String>, factory: (String) -> Expr): Expr = factory(iterator.next())
 
 fun parseString(str: String) = parse(str.split(" ").iterator())
 
@@ -41,9 +38,9 @@ fun main() {
   println(expr)
 }
 
-fun parse(it: Iterator<String>): Expr {
-  return parse(it) { token: String ->
-    parseBinaryOp(token) { parse(it) }
+fun parse(iterator: Iterator<String>): Expr {
+  return parseUsing(iterator) { token: String ->
+    parseBinaryOp(token) { parse(iterator) }
       ?: parseValue(token)
       ?: parseVariable(token)
   }

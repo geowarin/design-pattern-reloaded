@@ -36,8 +36,8 @@ dependencies {
   testImplementation("org.junit.jupiter:junit-jupiter-engine:5.5.2")
 
   implementation("io.arrow-kt:arrow-core:$arrow_version")
-//  implementation("io.arrow-kt:arrow-fx:$arrow_version")
   implementation("io.arrow-kt:arrow-syntax:$arrow_version")
+//  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3")
 }
 
 tasks.withType<Test> {
