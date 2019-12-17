@@ -1,31 +1,19 @@
 package com.geowarin.gof
 
-import java.util.*
-
 val operatorMap: Map<String, Operator> = Operator.values().associateBy { it.opName }
 
-fun parseOperator(token: String) = Optional.ofNullable(operatorMap[token])
+fun parseOperator(token: String): Operator? = operatorMap[token]
 
-fun parseValue(token: String): Optional<Expr> {
-  return try {
-    Optional.of(Value(token.toDouble()))
-  } catch (e: NumberFormatException) {
-    Optional.empty()
-  }
-}
+fun parseValue(token: String): Expr? = token.toDoubleOrNull()?.let { Value(it) }
 
-fun parseVariable(token: String): Optional<Expr> = Optional.of(Variable(token))
+fun parseVariable(token: String): Expr = Variable(token)
 
-fun parseBinaryOp(token: String, supplier: () -> Expr): Optional<Expr> =
-  parseOperator(token)
-    .map { op -> BinaryOp(op, supplier(), supplier()) }
+fun parseBinaryOp(token: String, supplier: () -> Expr): Expr? =
+  parseOperator(token)?.let { BinaryOp(it, supplier(), supplier()) }
 
-fun parse(
-  it: Iterator<String>,
-  factory: (String) -> Optional<Expr>
-): Expr {
+fun parse(it: Iterator<String>, factory: (String) -> Expr?): Expr {
   val token = it.next()
-  return factory(token).orElseThrow { IllegalStateException("illegal token $token") }
+  return factory(token) ?: throw IllegalStateException("illegal token $token")
 }
 
 fun parseString(str: String) = parse(str.split(" ").iterator())
@@ -35,6 +23,7 @@ enum class Operator(val opName: String) {
 }
 
 sealed class Expr
+
 class Value(val value: Double) : Expr() {
   override fun toString() = value.toString()
 }
@@ -55,6 +44,7 @@ fun main() {
 fun parse(it: Iterator<String>): Expr {
   return parse(it) { token: String ->
     parseBinaryOp(token) { parse(it) }
-      .or { parseValue(token).or { parseVariable(token) } }
+      ?: parseValue(token)
+      ?: parseVariable(token)
   }
 }
