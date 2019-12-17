@@ -30,11 +30,18 @@ dependencies {
   testImplementation("org.jetbrains.kotlin:kotlin-test")
 
   // Use the Kotlin JUnit integration.
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+  testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
+  testImplementation("org.junit.jupiter:junit-jupiter-engine:5.5.2")
 
   implementation("io.arrow-kt:arrow-core:$arrow_version")
 //  implementation("io.arrow-kt:arrow-fx:$arrow_version")
   implementation("io.arrow-kt:arrow-syntax:$arrow_version")
+}
+
+tasks.withType<Test> {
+  useJUnitPlatform()
 }
 
 application {

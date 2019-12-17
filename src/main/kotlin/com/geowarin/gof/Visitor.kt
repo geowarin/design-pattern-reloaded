@@ -1,20 +1,23 @@
 package com.geowarin.gof
 
-sealed class Vehicule
-class Car(val color: String) : Vehicule()
-class Moto(val cc: Int) : Vehicule()
+sealed class Vehicle
+class Car(val color: String) : Vehicle()
+class Moto(val cc: Int) : Vehicle()
 
 // Uncomment this for a compiler error:
-// class Boat() : Vehicule()
+// class Boat() : Vehicle()
 
 // The compiler forces the when clause to be exhaustive when used as an expression.
 // We have to either provide a "is Boat ->" branch or a "else ->" branch.
 
 fun main() {
-    val vehicule: Vehicule = Moto(250)
-    val text = when(vehicule) {
-        is Car -> "${vehicule.color} car"
-        is Moto -> "${vehicule.cc}cc moto"
-    }
+    val text = visitor(Moto(250))
     println(text)
+}
+
+fun visitor(vehicle: Vehicle): String {
+    return when (vehicle) {
+        is Car -> "${vehicle.color} car"
+        is Moto -> "${vehicle.cc}cc moto"
+    }
 }

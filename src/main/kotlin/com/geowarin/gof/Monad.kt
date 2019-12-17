@@ -2,10 +2,8 @@ package com.geowarin.gof
 
 import arrow.core.Predicate
 import arrow.core.andThen
-import arrow.core.compose
-import java.lang.Exception
 
-class ValidationException(message: String? = null): Exception(message)
+class ValidationException(message: String? = null) : Exception(message)
 
 class Validator<T> private constructor(private val t: T) {
   private val throwables = mutableListOf<Throwable>()
@@ -30,8 +28,8 @@ class Validator<T> private constructor(private val t: T) {
     return this
   }
 
-  fun <U> validate(message: String, projection: (T) -> U, validation: Predicate<U>): Validator<T>
-      = validate(message, projection.andThen(validation))
+  fun <U> validate(message: String, projection: (T) -> U, validation: Predicate<U>): Validator<T> =
+    validate(message, projection.andThen(validation))
 
   companion object {
     fun <T> of(t: T): Validator<T> = Validator(t)

@@ -14,10 +14,11 @@ fun main() {
   val logger2: Logger2 = { level, msg -> println("$level $msg") }
   logger2(Level.ERROR, "abort abort !")
 
+  // with extension function
   val logger1 = logger2.level(Level.WARNING)
   logger1("Oh oh")
 
-  // with arrow
+  // partial application with arrow
   val oldLogger: Logger = logger2.partially1(Level.WARNING)
   oldLogger("oh noes!")
 }
